@@ -2,13 +2,27 @@
 import discord
 import requests
 import math
+import os
+import asyncio
+from itertools import cycle
 
 client = discord.Client()
 
 # Constant
-DISCORD_TOKEN = 
+DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
-FORTNITE_API_KEY =
+FORTNITE_API_KEY = 'b46bbc98-6c9e-49cd-b098-d0d3e8b579ff'
+
+status = ['За Ранк напишете', '/rank в bot-commands', 'за смяна на nickname /nick']
+
+async def change_status():
+    await client.wait_until_ready()
+    msgs = cycle(status)
+
+    while not client.is_closed:
+        current_status = next(msgs)
+        await client.change_presence(game=discord.Game(name=current_status))
+        await asyncio.sleep(3)
 
 LISTE = ['Beginner', 'Carton', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ruby', 'Royality', 'Illuminati', 'Hackeur']
 WOOD_B = 0.00
@@ -216,6 +230,5 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
+client.loop.create_task(change_status())
 client.run(DISCORD_TOKEN)
-
-
